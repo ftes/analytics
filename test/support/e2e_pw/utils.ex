@@ -35,11 +35,18 @@ defmodule PlausibleE2E.Utils do
 
   def random_id, do: :rand.uniform(1_000_000_000_000_000) |> Integer.to_string(16) |> String.downcase()
 
-  def tab_button(page, label),
-    do: page |> Page.get_by_test_id("tab-button") |> Locator.filter(has_text: label)
+  # `Page | Locator` in the TS, so these dispatch on the struct.
+  defp get_by_test_id(%Locator{} = locator, id), do: Locator.get_by_test_id(locator, id)
+  defp get_by_test_id(page, id), do: Page.get_by_test_id(page, id)
 
-  def tab_button_with_dropdown(page, label),
-    do: page |> Page.get_by_test_id("tab-button-with-dropdown") |> Locator.filter(has_text: label)
+  def tab_button(page_or_locator, label),
+    do: page_or_locator |> get_by_test_id("tab-button") |> Locator.filter(has_text: label)
+
+  def tab_button_with_dropdown(page_or_locator, label),
+    do:
+      page_or_locator
+      |> get_by_test_id("tab-button-with-dropdown")
+      |> Locator.filter(has_text: label)
 
   def header(report, label) do
     report

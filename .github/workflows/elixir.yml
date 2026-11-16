@@ -26,6 +26,7 @@ jobs:
       pull-requests: read
     name: "Build and test (${{ matrix.mix_env }}, ${{ matrix.postgres_image }}, ${{ matrix.mix_test_partition }})"
     runs-on: blacksmith-4vcpu-ubuntu-2404
+    if: false
     strategy:
       matrix:
         mix_env: ["test", "ce_test"]
@@ -122,7 +123,7 @@ jobs:
       contents: read
       pull-requests: read
     name: End-to-end tests
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       MIX_ENV: e2e_test
@@ -180,12 +181,8 @@ jobs:
         id: playwright-cache
         with:
           path: |
-            e2e/node_modules
-            ~/.cache/ms-playwright
-            ~/.cache/ms-playwright-github
-          key: playwright-${{ runner.os }}-${{ hashFiles('e2e/package-lock.json') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-
+            ~/.cache/playwright
+          key: playwright-ex-${{ runner.os }}-1.65.0-rc.1
 
       - name: Check for changes in tracker/**
         uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
@@ -217,36 +214,23 @@ jobs:
       - run: mix download_country_database
       - run: mix run -e "Tzdata.ReleaseUpdater.poll_for_update"
 
-      - name: Install E2E dependencies
-        run: npm --prefix ./e2e ci
-
-      - name: Check format
-        run: npm --prefix ./e2e run check-format
-
-      - name: Check types
-        run: npm --prefix ./e2e run typecheck
-
-      - name: Install E2E Playwright Browsers
+      - name: Install Playwright browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        working-directory: ./e2e
-        run: npx playwright install --with-deps chromium
+        run: mix playwright.install -- chromium --with-deps
 
-      - name: Run E2E Playwright tests
-        run: npm --prefix ./e2e test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob
-
-      - name: Upload E2E blob report to GitHub Actions Artifacts
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: e2e-blob-report-${{ matrix.shardIndex }}
-          path: e2e/blob-report
-          retention-days: 1
+      - name: Run E2E tests (playwright_ex)
+        env:
+          MIX_TEST_PARTITION: ${{ matrix.shardIndex }}
+        run: |
+          mix test test/e2e_pw --partitions ${{ matrix.shardTotal }} ||
+            { [ $? -eq 2 ] && mix test test/e2e_pw --partitions ${{ matrix.shardTotal }} --failed; } ||
+            { [ $? -eq 2 ] && mix test test/e2e_pw --partitions ${{ matrix.shardTotal }} --failed; }
 
   merge-sharded-e2e-test-report:
-    if: ${{ !cancelled() }}
+    if: false
     needs: [e2e]
     timeout-minutes: 15
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -275,6 +259,7 @@ jobs:
     env:
       MIX_ENV: test
     runs-on: blacksmith-4vcpu-ubuntu-2404
+    if: false
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

@@ -22,11 +22,15 @@ config :plausible, Plausible.Session.Salts, interval: :timer.hours(1)
 
 # Browser suite in test/e2e_pw (playwright_ex), a port of e2e/. The app runs in the test VM.
 config :playwright, :test,
+  # as the original on CI
+  workers: 4,
   context_options: [
     base_url: System.get_env("BASE_URL", "http://localhost:8111"),
     # Sets single TZ for all envs where the tests run
     timezone_id: "UTC",
     viewport: %{width: 1280, height: 720}
   ],
-  trace: :retain_on_failure,
-  screenshot: :only_on_failure
+  # The original traces only on a retry; tracing every test is ~30% slower. For debugging:
+  # PW_TRACE=retain_on_failure PW_SCREENSHOT=only_on_failure mix test test/e2e_pw
+  trace: String.to_atom(System.get_env("PW_TRACE", "off")),
+  screenshot: String.to_atom(System.get_env("PW_SCREENSHOT", "off"))
