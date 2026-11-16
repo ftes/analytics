@@ -27,7 +27,6 @@ jobs:
     name: "Build and test (${{ matrix.mix_env }}, ${{ matrix.postgres_image }}, ${{ matrix.mix_test_partition }})"
     runs-on: blacksmith-4vcpu-ubuntu-2404
     if: false
-    if: false
     strategy:
       matrix:
         mix_env: ["test", "ce_test"]
@@ -277,7 +276,6 @@ jobs:
     env:
       MIX_ENV: test
     runs-on: blacksmith-4vcpu-ubuntu-2404
-    if: false
     if: false
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
