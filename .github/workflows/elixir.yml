@@ -182,7 +182,8 @@ jobs:
         with:
           path: |
             ~/.cache/playwright
-          key: playwright-ex-${{ runner.os }}-main-0217c34
+            ~/.cache/ms-playwright
+          key: playwright-ex-${{ runner.os }}-main-0217c34-browsers
 
       - name: Check for changes in tracker/**
         uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
