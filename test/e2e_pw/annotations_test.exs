@@ -1,23 +1,8 @@
 defmodule PlausibleE2E.Dashboard.AnnotationsTest do
-  use PlausibleE2E.Case, async: true
-
-  # `test.use({ locale: 'en-GB' })`: per-test context options have no equivalent here (context
-  # options are config-only), so the test makes its own context from the config's.
-  setup %{browser: browser} do
-    context =
-      Browser.new_context!(browser,
-        base_url: base_url(),
-        timezone_id: "UTC",
-        viewport: %{width: 1280, height: 720},
-        locale: "en-GB"
-      )
-
-    on_exit(fn -> BrowserContext.close(context) end)
-    %{gb_page: BrowserContext.new_page!(context)}
-  end
+  use PlausibleE2E.Case, async: true, context_options: [locale: "en-GB"]
 
   test "user can create annotations across granularities, edit, and delete them", %{
-    gb_page: page,
+    page: page,
     request: request
   } do
     user = %{

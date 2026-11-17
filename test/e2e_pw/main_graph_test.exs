@@ -30,24 +30,14 @@ defmodule PlausibleE2E.Dashboard.MainGraph do
       end
     end
   end
-
-  # `test.use({ locale: 'en-GB' })`: time label rendering depends on locale, this one has a 24h
-  # clock. A test's own context doesn't get the case's page, so replace it.
-  def use_en_gb(%{browser: browser}) do
-    context = Playwright.Browser.new_context!(browser, locale: "en-GB")
-    ExUnit.Callbacks.on_exit(fn -> Playwright.BrowserContext.close(context) end)
-    %{context: context, page: Playwright.BrowserContext.new_page!(context)}
-  end
 end
 
 defmodule PlausibleE2E.Dashboard.MainGraphNoFiltersTest do
-  use PlausibleE2E.Case, async: true
+  use PlausibleE2E.Case, async: true, context_options: [locale: "en-GB"]
 
   import PlausibleE2E.Dashboard.MainGraph
 
   require Playwright.Test
-
-  setup :use_en_gb
 
   describe "plotting all metrics" do
     test "with no filters applied", %{page: page, request: request} do
@@ -109,11 +99,9 @@ defmodule PlausibleE2E.Dashboard.MainGraphNoFiltersTest do
 end
 
 defmodule PlausibleE2E.Dashboard.MainGraphGoalTest do
-  use PlausibleE2E.Case, async: true
+  use PlausibleE2E.Case, async: true, context_options: [locale: "en-GB"]
 
   import PlausibleE2E.Dashboard.MainGraph
-
-  setup :use_en_gb
 
   describe "plotting all metrics" do
     test "filtered by goal", %{page: page, request: request} do
@@ -150,11 +138,9 @@ defmodule PlausibleE2E.Dashboard.MainGraphGoalTest do
 end
 
 defmodule PlausibleE2E.Dashboard.MainGraphPageTest do
-  use PlausibleE2E.Case, async: true
+  use PlausibleE2E.Case, async: true, context_options: [locale: "en-GB"]
 
   import PlausibleE2E.Dashboard.MainGraph
-
-  setup :use_en_gb
 
   describe "plotting all metrics" do
     test "filtered by page", %{page: page, request: request} do

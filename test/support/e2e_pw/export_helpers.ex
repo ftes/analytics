@@ -1,18 +1,29 @@
 defmodule PlausibleE2E.ExportHelpers do
   @moduledoc "Helpers of csv-export.spec.ts: triggering the stats export and reading its zip."
 
-  alias Playwright.{Download, Expect, Locator, Page}
+  alias Playwright.{Download, Expect, Locator, Page, Promise}
 
-  # Returns %{filename => content}. Upstream races the download against a `pageerror`, so a
-  # page error fails fast; `expect_download!` here just waits for the download.
+  # Returns %{filename => content}. Races the download against a `pageerror`, so a page error
+  # fails fast.
   def trigger_export_and_await_download(page) do
     Page.get_by_test_id(page, "dashboard-options-menu") |> Locator.click!()
     Page.get_by_text(page, "Export stats") |> Locator.wait_for!(state: :visible)
 
+    [result, _] =
+      Promise.all([
+        Promise.race([
+          Page.wait_for_event(page, :download),
+          Page.wait_for_event(page, :page_error)
+        ]),
+        Promise.async(fn -> Page.get_by_text(page, "Export stats") |> Locator.click!() end)
+      ])
+      |> Promise.await!()
+
     download =
-      Page.expect_download!(page, fn ->
-        Page.get_by_text(page, "Export stats") |> Locator.click!()
-      end)
+      case result do
+        %Download{} -> result
+        error -> raise error
+      end
 
     zip_path = Download.path!(download)
     if !zip_path, do: raise("Download path unavailable")

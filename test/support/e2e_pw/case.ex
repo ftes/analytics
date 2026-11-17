@@ -21,8 +21,6 @@ defmodule PlausibleE2E.Case do
         APIRequestContext,
         APIResponse,
         Dialog,
-        Keyboard,
-        Mouse,
         Promise
       }
 
