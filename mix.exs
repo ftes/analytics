@@ -78,7 +78,7 @@ defmodule Plausible.MixProject do
       {:bamboo_mua, "~> 0.2.0"},
       {:bcrypt_elixir, "~> 3.3"},
       {:bypass, "~> 2.1", only: [:dev, :test, :ce_test, :e2e_test]},
-      {:playwright, "~> 1.65.0-rc.1", hex: :playwright_ex, only: [:dev, :test, :ce_test, :ce_dev, :e2e_test]},
+      {:playwright, github: "ftes/playwright_ex", ref: "0217c3445a6845750cdd2a9ce0355588b0147356", only: [:dev, :test, :ce_test, :ce_dev, :e2e_test]},
       {:ecto_ch, "~> 0.11"},
       {:cloak, "~> 1.1"},
       {:cloak_ecto, "~> 1.2"},

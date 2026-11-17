@@ -182,7 +182,7 @@ jobs:
         with:
           path: |
             ~/.cache/playwright
-          key: playwright-ex-${{ runner.os }}-1.65.0-rc.1
+          key: playwright-ex-${{ runner.os }}-main-0217c34
 
       - name: Check for changes in tracker/**
         uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
@@ -216,7 +216,7 @@ jobs:
 
       - name: Install Playwright browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: mix playwright.install -- chromium --with-deps
+        run: mix playwright.install chromium --with-deps
 
       - name: Run E2E tests (playwright_ex)
         env:
