@@ -1,5 +1,5 @@
 defmodule PlausibleE2E.Dashboard.AnnotationsTest do
-  use PlausibleE2E.Case, async: true, context_options: [locale: "en-GB"]
+  use PlausibleE2E.Case, async: true, locale: "en-GB"
 
   test "user can create annotations across granularities, edit, and delete them", %{
     page: page,

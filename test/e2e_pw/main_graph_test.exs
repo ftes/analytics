@@ -33,7 +33,7 @@ defmodule PlausibleE2E.Dashboard.MainGraph do
 end
 
 defmodule PlausibleE2E.Dashboard.MainGraphNoFiltersTest do
-  use PlausibleE2E.Case, async: true, context_options: [locale: "en-GB"]
+  use PlausibleE2E.Case, async: true, locale: "en-GB"
 
   import PlausibleE2E.Dashboard.MainGraph
 
@@ -99,7 +99,7 @@ defmodule PlausibleE2E.Dashboard.MainGraphNoFiltersTest do
 end
 
 defmodule PlausibleE2E.Dashboard.MainGraphGoalTest do
-  use PlausibleE2E.Case, async: true, context_options: [locale: "en-GB"]
+  use PlausibleE2E.Case, async: true, locale: "en-GB"
 
   import PlausibleE2E.Dashboard.MainGraph
 
@@ -138,7 +138,7 @@ defmodule PlausibleE2E.Dashboard.MainGraphGoalTest do
 end
 
 defmodule PlausibleE2E.Dashboard.MainGraphPageTest do
-  use PlausibleE2E.Case, async: true, context_options: [locale: "en-GB"]
+  use PlausibleE2E.Case, async: true, locale: "en-GB"
 
   import PlausibleE2E.Dashboard.MainGraph
 
