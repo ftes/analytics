@@ -25,7 +25,7 @@ jobs:
       contents: read
       pull-requests: read
     name: "Build and test (${{ matrix.mix_env }}, ${{ matrix.postgres_image }}, ${{ matrix.mix_test_partition }}${{ matrix.billing_subscriptions == '1' && ', billing subscriptions' || '' }})"
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         mix_env: ["test", "ce_test"]
@@ -133,7 +133,7 @@ jobs:
       contents: read
       pull-requests: read
     name: End-to-end tests
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       MIX_ENV: e2e_test
@@ -254,7 +254,7 @@ jobs:
     name: Static checks (format, credo, dialyzer)
     env:
       MIX_ENV: test
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
